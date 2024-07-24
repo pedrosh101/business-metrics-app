@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "./components/navbar";
 import dynamic from "next/dynamic";
+import { FC } from "react";
 
 const DynamicDashboard = dynamic(() => import("./components/DashboardSection"));
 const DynamicVendors = dynamic(() => import("./components/VendorsSection"));
@@ -17,8 +18,10 @@ const DynamicConfigurations = dynamic(() =>
   import("./components/ConfigurationsSection")
 );
 
-export default function Home() {
-  const [section, setSection] = useState("dashboard");
+type Section = "dashboard" | "vendors" | "subscriptions" | "translations" | "pages" | "configurations";
+
+const Home: FC = () => {
+  const [section, setSection] = useState<Section>("dashboard");
 
   const renderSection = () => {
     switch (section) {
@@ -72,4 +75,6 @@ export default function Home() {
       </main>
     </>
   );
-}
+};
+
+export default Home;
