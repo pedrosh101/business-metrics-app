@@ -1,13 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
 
-const DynamicDashboard = dynamic(() => import("../components/DashboardSection"));
-const DynamicVendors = dynamic(() => import("../components/VendorsSection"));
-const DynamicSubscriptions = dynamic(() => import("../components/SubscriptionsSection"));
-const DynamicTranslations = dynamic(() => import("../components/TranslationsSection"));
-const DynamicPages = dynamic(() => import("../components/PagesSection"));
-const DynamicConfigurations = dynamic(() => import("../components/ConfigurationsSection"));
 
 const Navbar = ({ setSection }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +30,8 @@ const Navbar = ({ setSection }) => {
 
   return (
     <div className="flex sm:w-1/6 sm:min-h-screen bg-slate-50 text-black text-left border-r-2 border-slate-200">
+
+
       {/* menu mobile */}
       <div onClick={toggleNav} className="text-2xl cursor-pointer sm:hidden">
         <svg viewBox="0 0 24 24" fill="currentColor" height="1.3em">
@@ -83,21 +78,21 @@ const Navbar = ({ setSection }) => {
       <nav className="sm:fixed top-1/2 sm:transform sm:-translate-y-1/2 hidden sm:flex pl-12">
         <ul className="text-left">
           <li className="my-4">
-            <button onClick={() => setSection("dashboard")}>Dashboard</button>
+            <button onClick={() => setSection("dashboard")} className="hover:text-slate-700">Dashboard</button>
           </li>
           <li className="my-4">
-            <button onClick={() => setSection("vendors")}>Vendors</button>
+            <button onClick={() => setSection("vendors")} className="hover:text-slate-700">Vendors</button>
           </li>
           <li className="my-4">
-            <button onClick={() => setSection("subscriptions")}>
+            <button onClick={() => setSection("subscriptions")} className="hover:text-slate-700">
               Subscriptions
             </button>
           </li>
           <li className="my-4">
-            <button onClick={() => setSection("pages")}>Pages</button>
+            <button onClick={() => setSection("pages")} className="hover:text-slate-700">Pages</button>
           </li>
           <li className="my-4">
-            <button onClick={() => setSection("configurations")}>
+            <button onClick={() => setSection("configurations")} className="hover:text-slate-700">
               Configurations
             </button>
           </li>
