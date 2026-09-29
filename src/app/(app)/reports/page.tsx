@@ -1,0 +1,4 @@
+import { ComingSoon } from "../../../components/ui/ComingSoon";
+export default function Page() {
+  return <ComingSoon title="Reports" body="Scheduled and exportable summaries." />;
+}
