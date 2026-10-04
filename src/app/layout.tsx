@@ -4,14 +4,20 @@ import { Figtree } from "next/font/google";
 // @ts-expect-error TypeScript cannot resolve CSS side-effect imports here.
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import type { Viewport } from "next";
 
 const figtree = Figtree({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: "#0f3d3a",
+};
+
 export const metadata: Metadata = {
-  title: "Kipia — business metrics",
+  title: "Kipia — Business Metrics",
   description: "Revenue, customers, subscriptions and expenses in one place.",
 };
 

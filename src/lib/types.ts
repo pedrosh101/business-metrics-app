@@ -7,9 +7,9 @@ export interface Kpi {
   label: string;
   value: number;
   format: "currency" | "number" | "percent";
-  change: number;          // % vs. previous period
-  goodWhenDown?: boolean;  // expenses, churn
-  insight: string;         // the "why" behind the number
+  change: number;
+  goodWhenDown?: boolean;
+  insight: string;
 }
 export interface RevenuePoint { label: string; revenue: number; previous: number }
 export interface ChannelShare { id: Channel; name: string; share: number }

@@ -1,4 +1,14 @@
-import type { Activity, ChannelShare, Kpi, RevenuePoint } from "../lib/types";
+import type { Activity, ChannelShare, Kpi, RevenuePoint } from "@/lib/types";
+import { MONTHS, analyticsMock } from "./analytics";
+import { customers } from "./customers";
+import { monthlyExpenses } from "./expenses";
+import { invoices } from "./invoices";
+import { subscriptions } from "./subscriptions";
+import { vendors } from "./vendors";
+
+const last = (a: number[]) => a[a.length - 1];
+const before = (a: number[]) => a[a.length - 2];
+const pct = (cur: number, prev: number) => Math.round(((cur - prev) / prev) * 1000) / 10;
 
 export const channels: ChannelShare[] = [
   { id: "direct", name: "Direct", share: 42 },
@@ -7,30 +17,42 @@ export const channels: ChannelShare[] = [
   { id: "other", name: "Other", share: 9 },
 ];
 
-const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
-const base = [61, 64, 70, 68, 77, 83, 80, 91, 96, 104, 112, 128];
-export const revenueSeries: RevenuePoint[] = months.map((label, i) => ({
+export const revenueSeries: RevenuePoint[] = MONTHS.map((label, i) => ({
   label,
-  revenue: base[i] * 1000,
-  previous: Math.round(base[i] * 0.88) * 1000,
+  revenue: analyticsMock.revenue.current[i],
+  previous: Math.round(analyticsMock.revenue.current[i] * analyticsMock.revenue.prevFactor),
 }));
 
+const rev = analyticsMock.revenue.current;
+const cust = analyticsMock.customers.current;
+const churn = analyticsMock.churn.current;
+const subs = analyticsMock.subscriptions.current;
+
+const netNewCustomers = last(cust) - before(cust);
+const canceled = Math.round((before(cust) * last(churn)) / 100);
+const endingSoon = vendors.filter((v) => v.status === "active" && v.daysToEnd !== null && v.daysToEnd <= 60).length;
+
+/** Current month vs. the month before. */
 export const kpis: Kpi[] = [
-  { id: "revenue", label: "Revenue", value: 128420, format: "currency", change: 12.4,
-    insight: "Up mainly because of 18 new subscriptions." },
-  { id: "customers", label: "Customers", value: 1284, format: "number", change: 8.2,
-    insight: "184 customers joined this month." },
-  { id: "expenses", label: "Expenses", value: 42180, format: "currency", change: -3.1, goodWhenDown: true,
-    insight: "Vendor costs fell after two renegotiated contracts." },
-  { id: "churn", label: "Churn", value: 2.4, format: "percent", change: -25, goodWhenDown: true,
-    insight: "32 customers canceled, down from 43 last month." },
+  { id: "revenue", label: "Revenue", value: last(rev), format: "currency", change: pct(last(rev), before(rev)),
+    insight: `Up mainly because of ${last(subs) - before(subs)} net new subscriptions.` },
+  { id: "customers", label: "Customers", value: last(cust), format: "number", change: pct(last(cust), before(cust)),
+    insight: `${netNewCustomers + canceled} joined and ${canceled} canceled, a net gain of ${netNewCustomers}.` },
+  { id: "expenses", label: "Expenses", value: last(monthlyExpenses), format: "currency", change: pct(last(monthlyExpenses), before(monthlyExpenses)), goodWhenDown: true,
+    insight: `Spending is flat. ${endingSoon} vendor contracts end within 60 days.` },
+  { id: "churn", label: "Churn", value: last(churn), format: "percent", change: pct(last(churn), before(churn)), goodWhenDown: true,
+    insight: `Down from ${before(churn)}% last month. ${canceled} customers canceled.` },
 ];
 
+const trial = customers.find((c) => c.status === "trial")!;
+const newSub = subscriptions.find((s) => s.status === "active")!;
+const inv = (i: number) => invoices[i];
+
 export const activity: Activity[] = [
-  { id: "1", customer: "business 1", event: "New subscription", amount: 2400 },
-  { id: "2", customer: "business 2", event: "Invoice paid", amount: 1200 },
-  { id: "3", customer: "business 3", event: "Trial started", amount: 0 },
-  { id: "4", customer: "business 4", event: "Plan upgraded", amount: 640 },
-  { id: "5", customer: "business 5", event: "Invoice overdue", amount: -1850 },
-  { id: "6", customer: "business 6", event: "Invoice overdue", amount: -550 },
+  { id: inv(3).id, customer: inv(3).customer, event: "Invoice paid", amount: inv(3).amount },
+  { id: trial.id, customer: trial.name, event: "Trial started", amount: 0 },
+  { id: inv(4).id, customer: inv(4).customer, event: "Invoice paid", amount: inv(4).amount },
+  { id: inv(5).id, customer: inv(5).customer, event: "Invoice overdue", amount: -inv(5).amount },
+  { id: newSub.id, customer: newSub.customer, event: "New subscription", amount: newSub.monthly },
+  { id: inv(9).id, customer: inv(9).customer, event: "Invoice overdue", amount: -inv(9).amount },
 ];
