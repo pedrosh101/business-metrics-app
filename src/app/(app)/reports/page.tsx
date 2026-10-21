@@ -36,7 +36,7 @@ export default function ReportsPage() {
         </Select>
       </header>
 
-      {failed && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">We couldn't prepare that report. Please try again.</p>}
+      {failed && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">We couldn&apos;t prepare that report. Please try again.</p>}
 
       <section aria-labelledby="library" className="space-y-3">
         <h2 id="library" className="text-base font-semibold">Report library</h2>
