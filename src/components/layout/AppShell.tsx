@@ -73,6 +73,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <SidebarLink item={SETTINGS} path={path} />
       </aside>
+      <header className="lg:hidden sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/10 bg-pine px-4 text-white">
+        <div className="text-xl font-bold tracking-tight">
+          Kipia<span className="text-saffron px-0.5">.</span>
+        </div>
+
+        <div className="flex items-center gap-2"></div>
+      </header>
 
       <main className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-28 pt-6 sm:px-5 lg:px-10 lg:pb-12 lg:pt-8">
         {children}
