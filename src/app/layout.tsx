@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
-// The stylesheet is provided by the app's runtime build configuration.
-// @ts-expect-error TypeScript cannot resolve CSS side-effect imports here.
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import type { Viewport } from "next";
 
 const figtree = Figtree({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-figtree",
 });
 
 export const viewport: Viewport = {
@@ -21,10 +19,16 @@ export const metadata: Metadata = {
   description: "Revenue, customers, subscriptions and expenses in one place.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={cn("font-sans", figtree.variable)}>
-      <body className={cn("font-sans", figtree.variable)}>{children}</body>
+      <body className="bg-background text-foreground antialiased font-sans">
+        {children}
+      </body>
     </html>
   );
 }
