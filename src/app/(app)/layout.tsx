@@ -1,4 +1,10 @@
-import { AppShell } from "../../components/layout/AppShell";
+import { AppShell } from "@/components/layout/AppShell";
+import { ProfileProvider } from "@/components/profile/ProfileProvider";
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return <AppShell>{children}</AppShell>;
+  return (
+    <ProfileProvider>
+      <AppShell>{children}</AppShell>
+    </ProfileProvider>
+  );
 }
